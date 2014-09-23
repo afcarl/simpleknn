@@ -2,6 +2,7 @@ import sys
 import os
 
 import simpleknn
+from bigfile import BigFile
 
 if __name__ == "__main__":
     rootpath = './'
@@ -20,12 +21,12 @@ if __name__ == "__main__":
     print ("[simpleknn] dim=%d, nr_images=%d" % (searcher.get_dim(), searcher.get_nr_images()))
 
 
-    testfeaturefile = os.path.join(rootpath, testCollection, 'FeatureData', feature, 'id.feature.txt')
+    testfeaturedir = os.path.join(rootpath, testCollection, 'FeatureData', feature)
+    testfeaturefile = BigFile(testfeaturedir, dim)
+    testset = testfeaturefile.names
 
-    for line in open(testfeaturefile):
-        elems = line.strip().split()
-        testid = elems[0] 
-        testfeature = map(float, elems[1:])
+    for testid in testset:
+        testfeature = testfeaturefile.read_one(testid)
         visualNeighbors = searcher.search_knn(testfeature, max_hits=20000)
         print testid, len(visualNeighbors), " ".join(["%s %.3f" % (v[0],v[1]) for v in visualNeighbors[:3]])
 
