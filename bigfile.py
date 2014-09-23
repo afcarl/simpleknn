@@ -32,12 +32,15 @@ class BigFile:
         fr = open(self.binary_file, 'rb')
         fr.seek(index_name_array[0][0] * offset)
         res.fromfile(fr, self.ndims)
-        
+        previous = index_name_array[0][0]
+ 
         for next in sorted_index[1:]:
-            move = (next-1) * offset
+            move = (next-1-previous) * offset
+            #print next, move
             fr.seek(move, 1)
             res.fromfile(fr, self.ndims)
-        
+            previous = next
+
         fr.close()
 
         return [x[1] for x in index_name_array], [ res[i*self.ndims:(i+1)*self.ndims].tolist() for i in range(nr_of_images) ]
