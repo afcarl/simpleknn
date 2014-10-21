@@ -20,7 +20,9 @@ class BigFile:
             assert(min(requested)>=0)
             assert(max(requested)<len(self.names))
             index_name_array = [(x, self.names[x]) for x in requested]
-        
+        if len(index_name_array) == 0:
+            return [], []
+       
         index_name_array.sort(key=lambda v:v[0])
         sorted_index = [x[0] for x in index_name_array]
 
