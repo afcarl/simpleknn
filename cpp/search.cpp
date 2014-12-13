@@ -51,7 +51,7 @@ search_model *load_model(const char *model_file_name, const UInt64 dim, const UI
   
     //printf("%d %d\n", sizeof(count), count);
      
-    fprintf(stdout, "[search.load model] requesting %llu bytes memory ...\n", count * sizeof(DataType));
+    //fprintf(stdout, "[search.load model] requesting %llu bytes memory ...\n", count * sizeof(DataType));
     model->feature_ptr = new DataType[count];
 
     if (0 == model->feature_ptr) 
@@ -67,7 +67,7 @@ search_model *load_model(const char *model_file_name, const UInt64 dim, const UI
     model->dim = dim;
     model->nimages = nimages;
 
-    print_model(model);
+    //print_model(model);
 
     return model;
 }

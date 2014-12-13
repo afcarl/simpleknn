@@ -2,7 +2,7 @@
 # convert one or multiple feature files from txt format to binary (float32) format
 '''
 
-import os, sys
+import os, sys, math
 import numpy as np
 from optparse import OptionParser
 
@@ -33,6 +33,7 @@ def process(feature_dim, inputTextFiles, resultdir, overwrite):
     processed = set()
     imset = []
     count_line = 0
+    failed = 0
 
     for filename in inputTextFiles:
         print ('>>> Processing %s' % filename)
@@ -48,6 +49,15 @@ def process(feature_dim, inputTextFiles, resultdir, overwrite):
 
             del elems[0]
             vec = np.array(map(float, elems), dtype=np.float32)
+            okay = True
+            for x in vec:
+                if math.isnan(x):
+                    okay = False
+                    break
+            if not okay:
+                failed += 1
+                continue
+          
             assert(len(vec) == feature_dim), "dimensionality mismatch: required %d, input %d, id=%s, inputfile=%s" % (feature_dim, len(vec), name, filename)
             vec.tofile(fw)
             #print name, vec
@@ -57,7 +67,7 @@ def process(feature_dim, inputTextFiles, resultdir, overwrite):
     fw = open(res_id_file, 'w')
     fw.write(' '.join(imset))
     fw.close()
-    print ('%d lines parsed, %d ids, %d unique ids' % (count_line, len(processed), len(imset)))
+    print ('%d lines parsed, %d ids,  %d failed ->  %d unique ids' % (count_line, len(processed), failed, len(imset)))
 
 
 

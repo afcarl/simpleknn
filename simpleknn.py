@@ -53,7 +53,7 @@ class search_model(Structure):
 
     def set_distance(self, dfunc):
         self.dfunc = DFUNC_MAPPING[dfunc]
-        print ('[%s] use %s distance' % (self.__class__.__name__, self.get_distance_name()))
+        #print ('[%s] use %s distance' % (self.__class__.__name__, self.get_distance_name()))
 
     '''
     def useL2Distance(self):
