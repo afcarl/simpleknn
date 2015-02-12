@@ -3,13 +3,14 @@ import numpy as np
 
 class BigFile:
 
-    def __init__(self, datadir, ndims):
+    def __init__(self, datadir):
+        self.nr_of_images, self.ndims = map(int, open(os.path.join(datadir,'shape.txt')).readline().split())
         id_file = os.path.join(datadir, "id.txt")
-        self.names = [x.strip() for x in str.split(open(id_file).read()) if x.strip()]
-        self.name2index = dict(zip(self.names, range(len(self.names))))
-        self.ndims = ndims
+        self.names = open(id_file).read().strip().split()
+        assert(len(self.names) == self.nr_of_images)
+        self.name2index = dict(zip(self.names, range(self.nr_of_images)))
         self.binary_file = os.path.join(datadir, "feature.bin")
-        print ("[%s] %d instances loaded from %s" % (self.__class__.__name__, len(self.names), datadir))
+        print ("[%s] %dx%d instances loaded from %s" % (self.__class__.__name__, self.nr_of_images, self.ndims, datadir))
 
 
     def read(self, requested, isname=True):
@@ -53,12 +54,12 @@ class BigFile:
         return vectors[0]    
 
     def shape(self):
-        return [len(self.names), self.ndims]
+        return [self.nr_of_images, self.ndims]
 
 
 
 if __name__ == '__main__':
-    bigfile = BigFile('toydata/FeatureData/f1', 3)
+    bigfile = BigFile('toydata/FeatureData/f1')
 
     imset = str.split('b z a a b c')
     renamed, vectors = bigfile.read(imset)

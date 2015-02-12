@@ -19,7 +19,7 @@ def checkToSkip(filename, overwrite):
     return 0
 
 
-def process(feature_dim, inputTextFiles, resultdir, overwrite):
+def process(feat_dim, inputTextFiles, resultdir, overwrite):
     res_binary_file = os.path.join(resultdir, 'feature.bin')
     res_id_file = os.path.join(resultdir, 'id.txt')
 
@@ -58,7 +58,7 @@ def process(feature_dim, inputTextFiles, resultdir, overwrite):
                 failed += 1
                 continue
           
-            assert(len(vec) == feature_dim), "dimensionality mismatch: required %d, input %d, id=%s, inputfile=%s" % (feature_dim, len(vec), name, filename)
+            assert(len(vec) == feat_dim), "dimensionality mismatch: required %d, input %d, id=%s, inputfile=%s" % (feat_dim, len(vec), name, filename)
             vec.tofile(fw)
             #print name, vec
             imset.append(name)
@@ -67,8 +67,10 @@ def process(feature_dim, inputTextFiles, resultdir, overwrite):
     fw = open(res_id_file, 'w')
     fw.write(' '.join(imset))
     fw.close()
+    fw = open(os.path.join(resultdir,'shape.txt'), 'w')
+    fw.write('%d %d' % (len(imset), feat_dim))
+    fw.close() 
     print ('%d lines parsed, %d ids,  %d failed ->  %d unique ids' % (count_line, len(processed), failed, len(imset)))
-
 
 
 
