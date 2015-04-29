@@ -53,7 +53,7 @@ def process(options, feature, srcCollections, newCollection):
                     vec.tofile(fw)
                     newimset.append(im)
             del res[:]
-            if i%1e4 == 0:
+            if i%1e5 == 0:
                 printStatus(INFO, '%d parsed, %d obtained' % (len(seen), len(newimset)))
         fr.close()       
         printStatus(INFO, '%d parsed, %d obtained' % (len(seen), len(newimset)))
