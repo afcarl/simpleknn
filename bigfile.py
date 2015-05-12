@@ -56,10 +56,49 @@ class BigFile:
     def shape(self):
         return [self.nr_of_images, self.ndims]
 
+        
+class StreamFile:
 
+    def __init__(self, datadir):
+        self.feat_dir = datadir
+        self.nr_of_images, self.ndims = map(int, open(os.path.join(datadir,'shape.txt')).readline().split())
+        id_file = os.path.join(datadir, "id.txt")
+        self.names = open(id_file).read().strip().split()
+        assert(len(self.names) == self.nr_of_images)
+        self.name2index = dict(zip(self.names, range(self.nr_of_images)))
+        self.binary_file = os.path.join(datadir, "feature.bin")
+        print ("[%s] %dx%d instances loaded from %s" % (self.__class__.__name__, self.nr_of_images, self.ndims, datadir))
+        self.fr = None
+        self.current = 0
+    
+
+    def open(self):
+        self.fr = open(os.path.join(self.feat_dir,'feature.bin'), 'rb')
+        self.current = 0
+
+    def close(self):
+        if self.fr:
+            self.fr.close()
+            self.fr = None
+        
+    def __iter__(self):
+        return self
+        
+    def next(self):
+        if self.current >= self.nr_of_images:
+            self.close()
+            raise StopIteration
+        else:
+            res = array.array('f')
+            res.fromfile(self.fr, self.ndims)
+            _id = self.names[self.current]
+            self.current += 1
+            return _id, res.tolist() 
+            
 
 if __name__ == '__main__':
-    bigfile = BigFile('toydata/FeatureData/f1')
+    feat_dir = 'toydata/FeatureData/f1'
+    bigfile = BigFile(feat_dir)
 
     imset = str.split('b z a a b c')
     renamed, vectors = bigfile.read(imset)
@@ -67,4 +106,13 @@ if __name__ == '__main__':
 
     for name,vec in zip(renamed, vectors):
         print name, vec
+        
+    bigfile = StreamFile(feat_dir)
+    bigfile.open()
+    for name, vec in bigfile:
+        print name, vec
+    bigfile.close()
+
+    
+        
 
