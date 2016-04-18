@@ -1,10 +1,10 @@
 import sys
 import os
 import numpy as np
-from basic.common import ROOT_PATH, makedirsforfile, checkToSkip, printStatus
+from basic.common import makedirsforfile, checkToSkip, printStatus
 from bigfile import BigFile
 
-INFO = 'simpleknn.%s' % os.path.basename(__file__)
+INFO = __file__
 
 def process(options, feat_dir, imsetfile, result_dir):
 

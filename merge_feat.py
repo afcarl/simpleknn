@@ -1,10 +1,11 @@
 import os, sys, array
 import numpy as np
 
-from basic.common import ROOT_PATH, checkToSkip, makedirsforfile, printStatus
+from basic.constant import ROOT_PATH
+from basic.common import checkToSkip, makedirsforfile, printStatus
 from basic.util import readImageSet
 
-INFO = os.path.basename(__file__)
+INFO = __file__
 
 def process(options, feature, srcCollections, newCollection):
     assert(type(srcCollections) == list)
